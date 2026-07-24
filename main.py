@@ -35,7 +35,7 @@ for item in data_list:
             connection.starttls()                       # Secure connection
             connection.login(user=MY_EMAIL, password=MY_PASSWORD)
             connection.sendmail(
-                from_addr=MY_EMAILl,
+                from_addr=MY_EMAIL,
                 to_addrs=to_address,
                 msg=f"Subject:Birthday Wishes\n\n{actual_content}"
         )
