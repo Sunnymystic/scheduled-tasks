@@ -4,12 +4,15 @@ import smtplib
 import datetime as dt
 import random as rd
 import pandas as pd
+import os
 
 now = dt.datetime.now()
 day = now.day
 month = now.month
 year = now.year
-password = "isssyxsnswhaidbn"
+# AFTER (secrets stored securely in GitHub)
+MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_PASSWORD = os.environ.get("MY_PASSWORD")
 to_address = ""
 
 print(year, month, day)
@@ -27,12 +30,12 @@ for item in data_list:
             content = f.readlines()
             content[0] = content[0].replace("[NAME]",name)
             actual_content = " ".join(content)
-            my_email = "iamdogra007@gmail.com"
+            MY_EMAIL = "iamdogra007@gmail.com"
         with smtplib.SMTP("smtp.gmail.com",587) as connection:  # Build connection
             connection.starttls()                       # Secure connection
-            connection.login(user=my_email, password=password)
+            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
             connection.sendmail(
-                from_addr=my_email,
+                from_addr=MY_EMAILl,
                 to_addrs=to_address,
                 msg=f"Subject:Birthday Wishes\n\n{actual_content}"
         )
