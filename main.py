@@ -26,7 +26,7 @@ for item in data_list:
         to_address = item["email"]
         letters = ["letter_templates/letter_1.txt","letter_templates/letter_2.txt","letter_templates/letter_3.txt"]
         selected_format = rd.choice(letters)
-        with open(selected_format,"r") as f
+        with open(selected_format,"r") as f:
             content = f.readlines()
             content[0] = content[0].replace("[NAME]",name)
             actual_content = " ".join(content)
