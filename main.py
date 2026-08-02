@@ -1,45 +1,42 @@
-##################### Extra Hard Starting Project ######################
-
-import smtplib
-import datetime as dt
-import random as rd
-import pandas as pd
+import requests
 import os
+from twilio.rest import Client
 
-now = dt.datetime.now()
-day = now.day
-month = now.month
-year = now.year
-# AFTER (secrets stored securely in GitHub)
-MY_EMAIL = os.environ.get("MY_EMAIL")
-MY_PASSWORD = os.environ.get("MY_PASSWORD")
-to_address = ""
+account_sid = os.getenv("owm_account_sid")
+auth_token = os.getenv("owm_auth_token")
+API_KEY = os.getenv("owm_api_key")
+# print(API_KEY)
+LAT = 28.404289
+LON = 77.290321
+OEM_ENDPOINT = "https://api.openweathermap.org/data/2.5/forecast"
 
-print(year, month, day)
+weather_params = {
+    "lat" : LAT,
+    "lon" : LON,
+    "appid" : API_KEY,
+    "cnt" : 4,
+}
 
-data = pd.read_csv("birthdays.csv")
-data_list = data.to_dict(orient="records")
+response = requests.get(OEM_ENDPOINT,params=weather_params)
+response.raise_for_status()
+data = response.json()
 
-for item in data_list:
-    if item["day"] == day and item["month"] == month:
-        name = item["name"]
-        to_address = item["email"]
-        letters = ["letter_templates/letter_1.txt","letter_templates/letter_2.txt","letter_templates/letter_3.txt"]
-        selected_format = rd.choice(letters)
-        with open(selected_format,"r") as f:
-            content = f.readlines()
-            content[0] = content[0].replace("[NAME]",name)
-            actual_content = " ".join(content)
-            MY_EMAIL = "iamdogra007@gmail.com"
-        with smtplib.SMTP("smtp.gmail.com",587) as connection:  # Build connection
-            connection.starttls()                       # Secure connection
-            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
-            connection.sendmail(
-                from_addr=MY_EMAIL,
-                to_addrs=to_address,
-                msg=f"Subject:Birthday Wishes\n\n{actual_content}"
-        )
-            
+# print(f"Status Code : {data["cod"]}")
+# print(f"Response : {data}")
+will_rain = False
+for forecast in data["list"]:
+    condition_code = forecast["weather"][0]["id"] 
+    if condition_code < 700:
+        will_rain = True
+if will_rain:
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        to="+919582400091",
+        from_="+17372508034",
+        body="sms_event_notifications",
+    )
 
+    print(message.body)
 
-
+    
+    
