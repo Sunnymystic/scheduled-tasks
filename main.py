@@ -2,9 +2,9 @@ import requests
 import os
 from twilio.rest import Client
 
-account_sid = os.getenv("owm_account_sid")
-auth_token = os.getenv("owm_auth_token")
-API_KEY = os.getenv("owm_api_key")
+account_sid = os.getenv("ACCOUNT_SID")
+auth_token = os.getenv("AUTH_TOKEN")
+API_KEY = os.getenv("OWM_API_KEY")
 # print(API_KEY)
 LAT = 28.404289
 LON = 77.290321
